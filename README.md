@@ -5,7 +5,21 @@
 ## README 
 - KOREAN : [ImageCompressor (by noksek2) 한국어판 문서](./README_KR.md)
 
-##
+Why I Made This
+- I needed to compress and convert the format of numerous image files.
+
+- I'm a computer science major but had nothing to show for it.
+
+- Because it's fun.
+
+Features
+- JPG and BMP are supported (Experimentally: WEBP, PNG).
+
+- Image rotation in 90-degree increments (90, 180, 270) and flipping (horizontal, vertical).
+
+- Quality adjustment (stable only for JPG, JPEG, BMP).
+- Image resizing (by ratio or custom dimensions).
+- Message output options: Show All, Show Errors Only, Show None.
 
 ## HOW TO USE
 1. set option (format, rotation degree ..)
@@ -33,4 +47,4 @@ These issues are scheduled to be fixed.
 -Also, even if I receive bug reports, I might not fix them because I'm lazy.
 
 
-To translate with Gemini is funny haha
+(Translated by Gemini)
