@@ -46,5 +46,4 @@ These issues are scheduled to be fixed.
 
 -Also, even if I receive bug reports, I might not fix them because I'm lazy.
 
-
 (Translated by Gemini)
