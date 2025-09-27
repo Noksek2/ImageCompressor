@@ -28,7 +28,7 @@ A simple tool for image conversion and compression.
 
 -   **Format**: Select the target image format (e.g., JPG, BMP) (*PNG,WEBP: experimental)
 -   **Quality**: Adjust the compression quality of the image. (Higher numbers mean better quality).
--   **Rotation & Flip**: Rotate or flip the image horizontally/vertically.
+-   **Rotation & Flip**: Rotate(90, 180, 270) or flip the image horizontally/vertically. 
 
 ### Image Size
 
@@ -48,9 +48,12 @@ A simple tool for image conversion and compression.
 
 
 ## Details
-This is a beta version and feature support is still incomplete, as I personally use JPG files most of the time. Currently, the only conversion confirmed to be stable is:
 
-JPG -> JPG
+- JPG and BMP are supported (Experimentally: WEBP, PNG).
+This is a beta version and feature support is still incomplete, as I personally use JPG files most of the time. Currently, the only conversion confirmed to be stable is: JPG, BMP <-> JPG, BMP
+
+- Quality adjustment (stable only for JPG/JPEG, BMP).
+- Image resizing (by ratio or custom dimensions).
 
 ## Known Issues 🐛
 There are bugs with WebP <-> JPG conversions.
