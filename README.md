@@ -26,7 +26,7 @@ A simple tool for image conversion and compression.
 
 ### Image Option
 
--   **Format**: Select the target image format (e.g., JPG, PNG).
+-   **Format**: Select the target image format (e.g., JPG, BMP) (*PNG,WEBP: experimental)
 -   **Quality**: Adjust the compression quality of the image. (Higher numbers mean better quality).
 -   **Rotation & Flip**: Rotate or flip the image horizontally/vertically.
 
@@ -45,17 +45,6 @@ A simple tool for image conversion and compression.
 
 -   **Message option**: Choose the type of messages to display in the log. (Show all, Only error, None).
 -   **Clear message**: Clears all messages from the log.
-
-
-## Features
-- JPG and BMP are supported (Experimentally: WEBP, PNG).
-
-- Image rotation in 90-degree increments (90, 180, 270) and flipping (horizontal, vertical).
-
-- Quality adjustment (stable only for JPG, JPEG, BMP).
-- Image resizing (by ratio or custom dimensions).
-- Message output options: Show All, Show Errors Only, Show None.
-
 
 
 ## Details
