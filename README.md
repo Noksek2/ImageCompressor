@@ -11,6 +11,42 @@
 
 - Because it's fun.
 
+# How to Use ImageCompressor
+
+A simple tool for image conversion and compression.
+
+## Basic Usage
+
+1.  **Set Options**: First, configure all necessary conversion options (e.g., format, quality, size, save path).
+2.  **Execute**: Click the `Open & Convert` button.
+3.  **Select Files**: When the file dialog opens, select one or more image files you wish to convert.
+4.  **Check Results**: The conversion starts automatically upon selection. You can monitor the progress and see the results in the message log at the bottom.
+
+## Feature Guide
+
+### Image Option
+
+-   **Format**: Select the target image format (e.g., JPG, PNG).
+-   **Quality**: Adjust the compression quality of the image. (Higher numbers mean better quality).
+-   **Rotation & Flip**: Rotate or flip the image horizontally/vertically.
+
+### Image Size
+
+-   **Ratio**: Resizes the image based on a percentage of its original size. (Default: 100%).
+-   **Set owner size (Custom Size)**: Manually enter a specific width (W) and height (H).
+
+### Path Option
+
+-   **Path mode**: The default 'Auto' mode saves the converted files to the same folder as the original files.
+-   **Create /res folder**: If checked, this creates a subfolder named '/res' in the original directory and saves the output there.
+-   **Delete origin files**: Deletes the original files after conversion is complete. **(Caution: This action may be irreversible.)**
+
+### Other
+
+-   **Message option**: Choose the type of messages to display in the log. (Show all, Only error, None).
+-   **Clear message**: Clears all messages from the log.
+
+
 ## Features
 - JPG and BMP are supported (Experimentally: WEBP, PNG).
 
@@ -20,12 +56,6 @@
 - Image resizing (by ratio or custom dimensions).
 - Message output options: Show All, Show Errors Only, Show None.
 
-## HOW TO USE
-1. set option (format, rotation degree ..)
-2. or Image size (ex; ratio:100%, set owner size(100x50))
-3. If you don't want to make /res dir, then checkout the button. (Warning : If a file conflict occurs, the operation is aborted.)
-4. select path or drag files
-5. enjoy or reporting any bug plz
 
 
 ## Details
