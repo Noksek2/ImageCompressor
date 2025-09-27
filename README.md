@@ -61,7 +61,7 @@ There are bugs with WebP <-> JPG conversions.
 These issues are scheduled to be fixed.
 
 ## Usage Notes ⚠️
--By default, the Quality setting cannot be set higher than 95.
+-By default, the Quality setting cannot be set higher than 98.
 
 -If you attempt an unsupported conversion, an error message will appear. Please read the message carefully.
 
