@@ -68,3 +68,7 @@ These issues are scheduled to be fixed.
 -Also, even if I receive bug reports, I might not fix them because I'm lazy.
 
 (Translated by Gemini)
+
+## Source
+This program(or source) includes Libwebp.dll. 
+It is licensed under the [BSD 3-Clause License](https://developers.google.com/speed/webp/license). 
