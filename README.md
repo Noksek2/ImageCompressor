@@ -1,5 +1,4 @@
-한국어 문서는 아래에
-
+**Documentation is a work in progress.**
 
 # ImageCompressor 0.1.0-beta
 ## README 
@@ -23,7 +22,7 @@
 
 ## HOW TO USE
 1. set option (format, rotation degree ..)
-2. or Image size (ex; ratio:100%, set own size(100x50))
+2. or Image size (ex; ratio:100%, set owner size(100x50))
 3. If you don't want to make /res dir, then checkout the button. (Warning : If a file conflict occurs, the operation is aborted.)
 4. select path or drag files
 5. enjoy or reporting any bug plz
