@@ -9,18 +9,21 @@
 
 - I'm a computer science major but had nothing to show for it.
 
-- Because it's fun.
+- 暇つぶし
 
 # How to Use ImageCompressor 
 
 A simple tool for image conversion and compression.
 
-## Basic Usage 🔧
+## How to Use (Basic) 🔧
 
-1.  **Set Options**: First, configure all necessary conversion options (e.g., format, quality, size, save path).
-2.  **Execute**: Click the `Open & Convert` button.
-3.  **Select Files**: When the file dialog opens, select one or more image files you wish to convert.
-4.  **Check Results**: The conversion starts automatically upon selection. You can monitor the progress and see the results in the message log at the bottom.
+- **Set Options**: First, configure all necessary conversion options (e.g., format, quality, size, save path).
+- **Select Files**: When the file dialog opens, select one or more image files you wish to convert.
+- **Execute**: Click the `Open & Convert` button. 
+- **Drag & drop**: Or just drag & drop the files. Converting starts automatically.
+- **Check Results**: The conversion starts automatically upon selection. You can monitor the progress and see the results in the message log at the bottom.
+
+
 
 ## Feature Guide ️
 
@@ -70,5 +73,4 @@ These issues are scheduled to be fixed.
 (Translated by Gemini)
 
 ## Source 🫙
-This program(or source) includes Libwebp.dll. 
-It is licensed under the [BSD 3-Clause License](https://developers.google.com/speed/webp/license). 
+This program(or source) includes Libwebp.dll([BSD 3-Clause License](https://developers.google.com/speed/webp/license).)
