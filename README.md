@@ -4,7 +4,7 @@
 ## README ❗
 - KOREAN : [ImageCompressor (by noksek2) 한국어판 문서](./README_KR.md)
 
-## Why did you make It 🤔
+## "Why did you make it?🤔" 
 - I needed to compress and convert the format of numerous image files.
 
 - I'm a computer science major but had nothing to show for it.
