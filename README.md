@@ -73,4 +73,4 @@ These issues are scheduled to be fixed.
 (Translated by Gemini)
 
 ## Source 🫙
-This program(or source) includes Libwebp.dll([BSD 3-Clause License](https://developers.google.com/speed/webp/license).)
+This program(or source) includes Libwebp.dll([BSD 3-Clause License](NOTICE.md))
