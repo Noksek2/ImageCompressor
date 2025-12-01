@@ -1,3 +1,5 @@
+![License](https://img.shields.io/badge/license-MIT-green)
+
 **Documentation is a work in progress.**
 
 # ImageCompressor 0.1.0-beta
