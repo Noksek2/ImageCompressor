@@ -1,8 +1,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Documentation is a work in progress.**
-
-# ImageCompressor 0.1.0-beta
+# ImageCompressor 0.2.0
 ## README ❗
 - KOREAN : [ImageCompressor (by noksek2) 한국어판 문서](./README_KR.md)
 
@@ -60,10 +58,9 @@ This is a beta version and feature support is still incomplete, as I personally 
 - Quality adjustment (stable only for JPG/JPEG, BMP).
 - Image resizing (by ratio or custom dimensions).
 
-## Known Issues 🐛
-There are bugs with WebP <-> JPG conversions.
+## Solved Issues (v0.1.0) 🐛
+There are bugs with WebP <-> JPG, PNG, BMP conversions. Because of ARGB <-> RGBA
 
-These issues are scheduled to be fixed.
 
 ## Usage Notes ⚠️
 -By default, the Quality setting cannot be set higher than 98.
