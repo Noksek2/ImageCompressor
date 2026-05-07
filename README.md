@@ -1,75 +1,66 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-# ImageCompressor 0.2.0
+# ImageCompressor 0.2.1
+
+<img width="500" height="550" alt="image" src="./thumb.jpg" />
+
 ## README ❗
 - KOREAN : [ImageCompressor (by noksek2) 한국어판 문서](./README_KR.md)
 
-## "Why did you make it?🤔" 
-- I needed to compress and convert the format of numerous image files.
+## Platform
+- Windows 🪟 : C# Winform 
 
-- I'm a computer science major but had nothing to show for it.
 
-- 暇つぶし
-
-# How to Use ImageCompressor 
-
-A simple tool for image conversion and compression.
+## What's this for?  🤔
+- Batch compression and format conversion of image files
+- Just for practice
 
 ## How to Use (Basic) 🔧
 
-- **Set Options**: First, configure all necessary conversion options (e.g., format, quality, size, save path).
-- **Select Files**: When the file dialog opens, select one or more image files you wish to convert.
-- **Execute**: Click the `Open & Convert` button. 
-- **Drag & drop**: Or just drag & drop the files. Converting starts automatically.
-- **Check Results**: The conversion starts automatically upon selection. You can monitor the progress and see the results in the message log at the bottom.
+1. **Set Options**: First, configure all the options you need (format, quality, size, save path, etc.).
+2. **Execute**: Click the `Open & Convert` button.
+3. **Select Files**: When the file dialog opens, select one or more image files you want to convert.
+4. **Check Results**: The conversion starts automatically right after selection. You can check the progress and results in the message log at the bottom. 
 
+For more details, check the wiki separately.
 
+## Feature Guide
 
-## Feature Guide ️
-
-### Image Option ⚙
-
--   **Format**: Select the target image format (e.g., JPG, BMP) (*PNG,WEBP: experimental)
--   **Quality**: Adjust the compression quality of the image. (Higher numbers mean better quality).
--   **Rotation & Flip**: Rotate(90, 180, 270) or flip the image horizontally/vertically. 
+### Image Option ⚙️
+- **Format**: Select the target image format (JPG, PNG, etc.).
+- **Quality**: Adjust the compression quality.  (Higher number = better quality.  85~90 recommended. 95 or higher is disabled)
+- **Rotation & Flip**: Rotate the image in 90-degree increments or flip it horizontally/vertically. 
 
 ### Image Size 🌄
-
--   **Ratio**: Resizes the image based on a percentage of its original size. (Default: 100%).
--   **Set owner size (Custom Size)**: Manually enter a specific width (W) and height (H).
+- **Ratio**: Resize based on the percentage of the original image size. (Default: 100%)
+- **Custom size**:  Manually enter the width (W) and height (H) you want.  (Caution: )
 
 ### Path Option 📂
+- **Path mode**: The default 'Auto' mode saves the converted files in the same folder as the original files. 
+- **Output folder**: If checked, creates a '/res' subfolder in the original directory and saves the results there.
+- **Delete origin files**: Deletes the original files after conversion is complete. **(Caution: May be difficult to recover.)**
 
--   **Path mode**: The default 'Auto' mode saves the converted files to the same folder as the original files.
--   **Create /res folder**: If checked, this creates a subfolder named '/res' in the original directory and saves the output there.
--   **Delete origin files**: Deletes the original files after conversion is complete. **(Caution: This action may be irreversible.)**
-
-### Other 
-
--   **Message option**: Choose the type of messages to display in the log. (Show all, Only error, None).
--   **Clear message**: Clears all messages from the log.
-
-
-## Details 
-
-- JPG and BMP are supported (Experimentally: WEBP, PNG).
-This is a beta version and feature support is still incomplete, as I personally use JPG files most of the time. Currently, the only conversion confirmed to be stable is: JPG, BMP <-> JPG, BMP
-
-- Quality adjustment (stable only for JPG/JPEG, BMP).
-- Image resizing (by ratio or custom dimensions).
-
-## Solved Issues (v0.1.0) 🐛
-There are bugs with WebP <-> JPG, PNG, BMP conversions. Because of ARGB <-> RGBA
-
+### Other
+- **Message option**: Choose what kind of messages to display in the log (Show all, Only errors, None).
+- **Clear message**: Clears all messages from the log.
 
 ## Usage Notes ⚠️
--By default, the Quality setting cannot be set higher than 98.
+- By default, Quality cannot be set higher than 98.
+- If you try an unsupported conversion, you'll get an error.  Please read the messages carefully.
+- Development may be discontinued due to lack of users.
+- This is still a beta version, and feature support is incomplete.
 
--If you attempt an unsupported conversion, an error message will appear. Please read the message carefully.
+## Bugs 🐛
+**v0.1.0**
+- WebP conversion has bugs. File size gets too large or conversion results are weird.  Seems to be due to color differences between libwebp and GDI+. Fixed in v0.2.0
 
--Also, even if I receive bug reports, I might not fix them because I'm lazy.
+## Cross-platform support (planned for 3.0)
+- Linux (Debian/Ubuntu) 🐧 : C GTK3.0
 
-(Translated by Gemini)
 
-## Source 🫙
-This program(or source) includes Libwebp.dll([BSD 3-Clause License](NOTICE.md))
+## Third-party Libraries (`./CREDITS`)
+This software uses the following open-source libraries:
+
+*  **libwebp** - [BSD 3-Clause License](https://github.com/webmproject/libwebp/blob/main/COPYING)
+    Copyright (c) 2010, Google Inc. All rights reserved.
+	
