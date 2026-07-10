@@ -1,6 +1,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-# ImageCompressor 0.2.1
+# ImageCompressor 0.2.2
 
 <img width="500" height="550" alt="image" src="./thumb.jpg" />
 
