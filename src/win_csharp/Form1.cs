@@ -97,6 +97,7 @@ namespace ImageCompressor
             }
             return null;
         }
+        //SwapRGBChannel For WEBP (ARGB <-> RGBA)
         void SwapRGBChannel(Bitmap bmp)
         {
             // 픽셀 포맷 확인 (주로 24bppRgb, 32bppArgb에서 발생)
@@ -132,68 +133,8 @@ namespace ImageCompressor
             System.Runtime.InteropServices.Marshal.Copy(pixels, 0, ptr, byteCount);
             bmp.UnlockBits(bmpData);
         }
-        void ImageQuality(string path, string newfile, string orgext)
+        RotateFlipType GetBitmapRotateFlipType(int idx)
         {
-
-            int width = 0, height = 0;
-            Bitmap bmp;
-            string convext = formatStrings[comboBox1.SelectedIndex];
-
-            var info = GetEncoderInfo("image/" + convext.Substring(1));
-
-            var encodeParas = new EncoderParameters(1);
-            var encode = System.Drawing.Imaging.Encoder.Quality;
-            var para = new EncoderParameter(encode, (long)numericScroll.Value);
-            encodeParas.Param[0] = para;
-
-
-            if (String.Compare(orgext, ".webp") != 0)
-            {
-                using (Image img = Image.FromFile(path))
-                {
-                    if (radioRatio.Checked)
-                    {
-                        width = (int)(numericRatio.Value * (decimal)img.Width / (decimal)100.0);
-                        height = (int)(numericRatio.Value * (decimal)img.Height / (decimal)100.0);
-                    }
-                    else
-                    {
-                        width = (int)numericWidth.Value;
-                        height = (int)numericHeight.Value;
-                    }
-
-                    var originalFormat = img.PixelFormat;
-                    var targetFormat = (originalFormat == PixelFormat.Format32bppArgb ||
-                                        originalFormat == PixelFormat.Format64bppArgb ||
-                                        originalFormat == PixelFormat.Format32bppPArgb)
-                        ? PixelFormat.Format32bppArgb
-                        : PixelFormat.Format24bppRgb;
-
-                    bmp = new Bitmap(img, new Size(width, height));
-                    /*using (var g = Graphics.FromImage(bmp))
-					{
-						g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-						g.DrawImage(img, 0, 0, width, height); // 리사이징하여 그리기
-					}*/
-                    // --- 수정 끝 ---
-                }
-            }
-            else
-            {
-                bmp = WebP.DecodeWebPToBitmap(path);
-                SwapRGBChannel(bmp);
-                if (radioRatio.Checked)
-                {
-                    width = (int)(numericRatio.Value * (decimal)bmp.Width / (decimal)100.0);
-                    height = (int)(numericRatio.Value * (decimal)bmp.Height / (decimal)100.0);
-                }
-                else
-                {
-                    width = (int)numericWidth.Value;
-                    height = (int)numericHeight.Value;
-                }
-                bmp = WebP.ResizeBitmap(bmp, width, height);
-            }
             int[] map ={
 				// 0,4,6,
 				(int)RotateFlipType.RotateNoneFlipNone,
@@ -215,8 +156,124 @@ namespace ImageCompressor
                 (int)RotateFlipType.Rotate270FlipX,
                 (int)RotateFlipType.Rotate90FlipX,
             };
-            bmp.RotateFlip((RotateFlipType)map[comboRotation.SelectedIndex * 3 + comboFlip.SelectedIndex]);
+            return (RotateFlipType)map[comboRotation.SelectedIndex * 3 + comboFlip.SelectedIndex];
+        }
+        Bitmap CreateLetterBoxBitmap(Bitmap srcBmp, int resW, int resH, Color bgColor)
+        {
+            Bitmap resBmp = new Bitmap(resW, resH, srcBmp.PixelFormat);
+            using (Graphics g = Graphics.FromImage(resBmp))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                g.Clear(bgColor);
 
+
+                
+                float ratioX = (float)resW / srcBmp.Width;
+                float ratioY = (float)resH / srcBmp.Height;
+                
+                float ratio = Math.Min(ratioX, ratioY);
+
+                // 5. 새 크기 계산
+                int newW = (int)(srcBmp.Width * ratio);
+                int newH = (int)(srcBmp.Height * ratio);
+
+                // 6. 중앙 배치를 위한 시작 좌표(X, Y) 계산
+                int posX = (resW - newW) / 2;
+                int posY = (resH - newH) / 2;
+
+                // 7. 여백이 있는 도화지 중앙에 원본 이미지 그리기
+                g.DrawImage(srcBmp, posX, posY, newW, newH);
+            }
+            return resBmp;
+        }
+
+        void ConvertImageQuality(string path, string newfile, string orgext)
+        {
+
+            int width = 0, height = 0;
+            Bitmap bmp;
+            string convext = formatStrings[comboBox1.SelectedIndex];
+
+            var info = GetEncoderInfo("image/" + convext.Substring(1));
+
+            var encodeParas = new EncoderParameters(1);
+            var encode = System.Drawing.Imaging.Encoder.Quality;
+            var para = new EncoderParameter(encode, (long)numericScroll.Value);
+            encodeParas.Param[0] = para;
+
+            //IF FILE IS WEBP
+            if (String.Compare(orgext, ".webp") == 0)
+            {
+                bmp = WebP.DecodeWebPToBitmap(path);
+                SwapRGBChannel(bmp);
+                if (radioRatio.Checked)
+                {
+                    width = (int)(numericRatioW.Value * (decimal)bmp.Width / (decimal)100.0);
+                    height = (int)(numericRatioH.Value * (decimal)bmp.Height / (decimal)100.0);
+
+                }
+                else
+                {
+                    width = (int)numericWidth.Value;
+                    height = (int)numericHeight.Value;
+                }
+                if (comboStretch.SelectedIndex == 0) {
+                    Bitmap letterbox = CreateLetterBoxBitmap(bmp, width, height, buttonBg.BackColor);
+                    bmp.Dispose();
+                    bmp = letterbox;
+                }
+                else {
+                    bmp = WebP.ResizeBitmap(bmp, width, height);
+                }
+            }
+            //IF FILE IS NOT WEBP
+            else
+            {
+                //x/y res: src = 0.1 : 0.3 = 1/10 : 3/10 -> x에 맞추자.
+                // 0.3 : 0.1 -> y에 맞추자. 
+                using (Image img = Image.FromFile(path))
+                {
+                    if (radioRatio.Checked)
+                    {
+                        width = (int)(numericRatioW.Value * (decimal)img.Width / (decimal)100.0);
+                        height = (int)(numericRatioH.Value * (decimal)img.Height / (decimal)100.0);
+                    }
+                    else
+                    {
+                        width = (int)numericWidth.Value;
+                        height = (int)numericHeight.Value;
+                    }
+
+                    var originalFormat = img.PixelFormat;
+                    var targetFormat = (originalFormat == PixelFormat.Format32bppArgb ||
+                                        originalFormat == PixelFormat.Format64bppArgb ||
+                                        originalFormat == PixelFormat.Format32bppPArgb)
+                        ? PixelFormat.Format32bppArgb
+                        : PixelFormat.Format24bppRgb;
+
+                    if (comboStretch.SelectedIndex == 0)
+                    {
+                        using (Bitmap tbmp = new Bitmap(img))
+                        {
+                            bmp = CreateLetterBoxBitmap(tbmp, width, height, buttonBg.BackColor);
+                        }
+                    }
+                    else
+                    {
+                        bmp = new Bitmap(img, new Size(width, height));
+                    }
+                    
+                    /*using (var g = Graphics.FromImage(bmp))
+					{
+						g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+						g.DrawImage(img, 0, 0, width, height); // 리사이징하여 그리기
+					}*/
+                    // --- 수정 끝 ---
+                }
+            }
+            bmp.RotateFlip(GetBitmapRotateFlipType(comboRotation.SelectedIndex));
 
 
             if (checkBoxDelorg.Checked) // del 체크 -> 지움
@@ -240,9 +297,9 @@ namespace ImageCompressor
             GetFilenameAndPath(out orgpath, out newpath, out orgfile, file);
             GetFilenameExceptFormat(out filename, out ext, orgfile);
             newfile = filename;
-            if(checkBox_suffix.Checked)
+            if (checkBox_suffix.Checked)
                 newfile += textBox_suffix.Text;
-            newfile += formatStrings[comboBox1.SelectedIndex]; 
+            newfile += formatStrings[comboBox1.SelectedIndex];
         }
 
         bool IsAllowToConvert()
@@ -311,7 +368,7 @@ namespace ImageCompressor
             EnableControls(false); //컨트롤 비활성화 (변환 오류 방지)
             string orgpath, newpath, newfile, ext; //원본 파일 경로, 새 파일 경로, 확장자
             int suc = 0, fai = 0; //성공 횟수, 실패 횟수
-            
+
             if (buttonSaveMode.Text != "Auto")
                 AppendTextMsg("Located in \"" + textBoxPath.Text + "\"\r\n");
 
@@ -328,7 +385,7 @@ namespace ImageCompressor
                         continue;
                     }
                 }
-                
+
                 if (Directory.Exists(newpath) == false)
                 {
                     try { Directory.CreateDirectory(newpath); }
@@ -339,11 +396,11 @@ namespace ImageCompressor
                         continue;
                     }
                 }
-                else if(checkBoxOverwrite.Checked == false)
+                else if (checkBoxOverwrite.Checked == false)
                 {
-                    if (System.IO.File.Exists( newpath + newfile ))
+                    if (System.IO.File.Exists(newpath + newfile))
                     {
-                        AppendTextMsg($"The file name is duplicated!! \"{newfile}\"\r\n"); 
+                        AppendTextMsg($"The file name is duplicated!! \"{newfile}\"\r\n");
                         fai++;
                         continue;
                     }
@@ -351,7 +408,7 @@ namespace ImageCompressor
                 if (radioMsgshow.Checked) AppendTextMsg("[" + (suc + fai + 1) + "] Saving \"" + newfile + "\"...\r\n");
                 try
                 {
-                    ImageQuality(file, newpath + newfile, ext);
+                    ConvertImageQuality(file, newpath + newfile, ext);
                     //img.Save(path + newfile,System.Drawing.Imaging.ImageFormat.Jpeg);
                     suc += 1;
                 }
@@ -359,7 +416,7 @@ namespace ImageCompressor
                 {
                     //label1.Text += "!! Failed to open \"" + file + "\"!!\n";
                     if (radioMsgshow.Checked || radioMsgerror.Checked)
-                        AppendTextMsg("!! Failed to save \"" + newfile + "\"!!\r\n");
+                        AppendTextMsg("!! Failed to save \"" + newfile + "\"!!\r\n"+"Msg : "+ex.Message + "\r\n");
                     fai += 1;
                 }
 
@@ -479,20 +536,22 @@ namespace ImageCompressor
 
         private void ImageConvert_Load(object sender, EventArgs e)
         {
+            comboStretch.SelectedIndex = 0;
             comboRotation.SelectedIndex = 0;
             comboFlip.SelectedIndex = 0;
+            buttonBg.BackColor = Color.White;
         }
 
         private void radioRatio_CheckedChanged(object sender, EventArgs e)
         {
             numericHeight.Enabled = numericWidth.Enabled = false;
-            numericRatio.Enabled = true;
+            numericRatioW.Enabled = numericRatioH.Enabled = true;
         }
 
         private void radioSize_CheckedChanged(object sender, EventArgs e)
         {
             numericHeight.Enabled = numericWidth.Enabled = true;
-            numericRatio.Enabled = false;
+            numericRatioW.Enabled = numericRatioH.Enabled = false;
         }
 
         private void groupBox4_Enter(object sender, EventArgs e)
@@ -537,6 +596,19 @@ namespace ImageCompressor
 
         private void checkBoxOverwrite_CheckedChanged(object sender, EventArgs e)
         {
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                buttonBg.BackColor = colorDialog1.Color;
+            }
         }
     }
 }

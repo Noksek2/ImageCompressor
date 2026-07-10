@@ -6,9 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <Version>0.1.1</Version>
+    <Version>0.2.2</Version>
     <Authors>Noksek2</Authors>
     <PackageIcon>img.jpg</PackageIcon>
+    <PackageTags>v0.2.2</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +17,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\ileum\OneDrive\바탕 화면\img.jpg">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
