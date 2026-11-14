@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace ImageCompressor
 {
-    public partial class Form2 : Form
+    public partial class InfoForm : Form
     {
-        public Form2()
+        public InfoForm()
         {
             InitializeComponent();
         }

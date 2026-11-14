@@ -142,19 +142,19 @@ namespace ImageCompressor
                 (int)RotateFlipType.RotateNoneFlipY,
 				
 				//2,6,4,
-				(int)RotateFlipType.Rotate180FlipNone,
-                (int)RotateFlipType.RotateNoneFlipX,
-                (int)RotateFlipType.Rotate180FlipX,
+                (int)RotateFlipType.Rotate90FlipNone,
+                (int)RotateFlipType.Rotate90FlipX,
+                (int)RotateFlipType.Rotate90FlipY,
 				
                 //1,5,7,
-				(int)RotateFlipType.Rotate90FlipNone,
-                (int)RotateFlipType.Rotate90FlipX,
-                (int)RotateFlipType.Rotate270FlipX,
+				(int)RotateFlipType.Rotate180FlipNone,
+                (int)RotateFlipType.Rotate180FlipX,
+                (int)RotateFlipType.Rotate180FlipY,
 
                 //3,7,5
 				(int)RotateFlipType.Rotate270FlipNone,
                 (int)RotateFlipType.Rotate270FlipX,
-                (int)RotateFlipType.Rotate90FlipX,
+                (int)RotateFlipType.Rotate270FlipY,
             };
             return (RotateFlipType)map[comboRotation.SelectedIndex * 3 + comboFlip.SelectedIndex];
         }
@@ -169,10 +169,10 @@ namespace ImageCompressor
                 g.Clear(bgColor);
 
 
-                
+
                 float ratioX = (float)resW / srcBmp.Width;
                 float ratioY = (float)resH / srcBmp.Height;
-                
+
                 float ratio = Math.Min(ratioX, ratioY);
 
                 // 5. 새 크기 계산
@@ -219,12 +219,14 @@ namespace ImageCompressor
                     width = (int)numericWidth.Value;
                     height = (int)numericHeight.Value;
                 }
-                if (comboStretch.SelectedIndex == 0) {
+                if (comboStretch.SelectedIndex == 0)
+                {
                     Bitmap letterbox = CreateLetterBoxBitmap(bmp, width, height, buttonBg.BackColor);
                     bmp.Dispose();
                     bmp = letterbox;
                 }
-                else {
+                else
+                {
                     bmp = WebP.ResizeBitmap(bmp, width, height);
                 }
             }
@@ -264,7 +266,7 @@ namespace ImageCompressor
                     {
                         bmp = new Bitmap(img, new Size(width, height));
                     }
-                    
+
                     /*using (var g = Graphics.FromImage(bmp))
 					{
 						g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -273,6 +275,7 @@ namespace ImageCompressor
                     // --- 수정 끝 ---
                 }
             }
+            //comboRotation.SelectedIndex * 90 = rotation angle
             bmp.RotateFlip(GetBitmapRotateFlipType(comboRotation.SelectedIndex));
 
 
@@ -416,7 +419,7 @@ namespace ImageCompressor
                 {
                     //label1.Text += "!! Failed to open \"" + file + "\"!!\n";
                     if (radioMsgshow.Checked || radioMsgerror.Checked)
-                        AppendTextMsg("!! Failed to save \"" + newfile + "\"!!\r\n"+"Msg : "+ex.Message + "\r\n");
+                        AppendTextMsg("!! Failed to save \"" + newfile + "\"!!\r\n" + "Msg : " + ex.Message + "\r\n");
                     fai += 1;
                 }
 
@@ -445,7 +448,7 @@ namespace ImageCompressor
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var newform = new Form2();
+            var newform = new InfoForm();
             newform.ShowDialog();
         }
 
@@ -609,6 +612,11 @@ namespace ImageCompressor
             {
                 buttonBg.BackColor = colorDialog1.Color;
             }
+        }
+
+        private void comboRotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
