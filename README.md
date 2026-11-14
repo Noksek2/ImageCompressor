@@ -1,6 +1,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-# ImageCompressor 0.2.2
+# ImageCompressor 0.2.3
 
 <img width="500" height="550" alt="image" src="./thumb.jpg" />
 
@@ -50,11 +50,19 @@ For more details, check the wiki separately.
 - Development may be discontinued due to lack of users.
 - This is still a beta version, and feature support is incomplete.
 
-## Bugs 🐛
+## Bugs fix🐛
 **v0.1.0**
 - WebP conversion has bugs. File size gets too large or conversion results are weird.  Seems to be due to color differences between libwebp and GDI+. Fixed in v0.2.0
 
-## Cross-platform support (planned for 3.0)
+**v0.2.2**
+- Rotation Bug. Fixed in v0.2.3.
+
+## Latest patch only
+Only the latest patch per minor version is supported.
+
+Therefore, no release support under v0.2.2.
+
+## Cross-platform support - not yet. (planned for 3.0)
 - Linux (Debian/Ubuntu) 🐧 : C GTK3.0
 
 

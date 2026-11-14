@@ -1,6 +1,6 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-# ImageCompressor 0.2.2
+# ImageCompressor 0.2.3
 ## 플랫폼
 - Windows 🪟 : C# Winform
 
@@ -57,6 +57,12 @@
 webp 변환의 경우 버그가 있습니다. 용량이 너무 커지거나, 변환결과가 이상해짐. 
 libwebp와 gdi+ 색상의 차이로 보임. v0.2.0에서 수정 완료
 
+### v0.2.2
+Rotation(회전)의 버그가 발견됨. v0.2.3에서 수정
+
+
+## 새 패치버전만 지원함
+v0.2부터는 Release 페이지에서는 새로운 패치버전만 지원하고, 나머지는 버그 등이 존재하므로 삭제함.
 
 ## 크로스 플랫폼 지원 예정
 - Linux(Debian/Ubuntu) 🐧 : C GTK3.0
