@@ -4,3 +4,4 @@ src/win32_cpp/win32_cpp/
 src/win_csharp/bin/
 src/win_csharp/obj/
 src/win_csharp/.vs/
+src/linux_gtk/gtkmain
