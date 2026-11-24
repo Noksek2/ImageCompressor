@@ -6,10 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <Version>0.2.2</Version>
+    <Version>0.2.4</Version>
     <Authors>Noksek2</Authors>
     <PackageIcon>img.jpg</PackageIcon>
-    <PackageTags>v0.2.2</PackageTags>
+    <PackageTags>v0.2.4</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

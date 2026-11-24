@@ -33,6 +33,12 @@ namespace ImageCompressor
         bool comboCheck;
         string[] formatStrings = { ".png", ".jpeg", ".bmp", ".webp", ".webp", ".jpg" };
         List<Control> actControls;
+        struct IMCConvInfo {
+            ComboFormatType org_ext;
+            ComboFormatType conv_ext;
+            int conv_rotation;
+        };
+
 
         public ImageCompressor()
         {
