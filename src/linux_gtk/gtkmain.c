@@ -5,33 +5,7 @@ MIT LICENSE
 //imagecompressor imc_
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
-typedef struct IMCImgInfo{
-	int index_ext;
-	const char* respath;
-	int width;
-	int height;
-} IMCImgInfo;
-typedef struct IMCConvInfo{
-	int index_ext;
-	int index_rotate;
-	int index_flip;
-	const char* respath;
-	int width;
-	int height;
-} IMCConvInfo;
-typedef struct {
-	GtkWidget* entry;
-	GtkWidget* combo;
-	GtkWidget* comboRotate;
-	GtkWidget* comboFlip;
-	GtkWidget* spinQuality;
-	GtkWidget* entryRespath;
-	GtkWidget* listboxImage;
-	
-	
-} IMCAppWidgets;
-IMCAppWidgets* g_app;
-IMCConvInfo g_convinfo;
+
 enum {
 	CONV_TO_PNG,
 	CONV_TO_JPG,
@@ -49,6 +23,40 @@ enum {
 	ROTATE_180,
 	ROTATE_270,
 };
+
+typedef struct IMCImgInfo{
+	int index_ext;
+	const char* imgpath;
+	int width;
+	int height;
+} IMCImgInfo;
+
+typedef struct IMCConvInfo{
+	int index_ext;
+	int index_rotate;
+	int index_flip;
+	const char* respath;
+	int width;
+	int height;
+	float ratioX;
+	float ratioY;
+} IMCConvInfo;
+
+typedef struct {
+	GtkWidget* entry;
+	GtkWidget* combo;
+	GtkWidget* comboRotate;
+	GtkWidget* comboFlip;
+	GtkWidget* spinQuality;
+	GtkWidget* spinRatioX;
+	GtkWidget* spinRatioY;
+	GtkWidget* entryRespath;
+	GtkWidget* listboxImage;	
+} IMCAppWidgets;
+
+IMCAppWidgets* g_app;
+IMCConvInfo g_convinfo;
+
 gboolean imc_check_path(const char* path){
 	
 	return TRUE;
@@ -109,20 +117,70 @@ static void imc_select_images(GtkWidget *button, gpointer user_data){
 	//destroy dialog
 	gtk_widget_destroy(dialog);
 }
-gboolean imc_convert_start(IMCImgInfo imginfo){
+
+void imc_select_path(GtkWidget* btn, gpointer user_data){
+	GtkWidget* parent_window = (GtkWidget*)user_data;
+	GtkWidget *dialog;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+    gint res;
+	//new dialog
+	dialog = gtk_file_chooser_dialog_new("Select Path",
+                                         GTK_WINDOW(parent_window),
+                                         action,
+                                         "_cancel", GTK_RESPONSE_CANCEL,
+                                         "_select", GTK_RESPONSE_ACCEPT,
+                                         NULL);
+	if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		char *sel_path; //selected path
+		GtkFileChooser *choose = GTK_FILE_CHOOSER(dialog);
+		sel_path = gtk_file_chooser_get_filename(choose);
+		gtk_entry_set_text(GTK_ENTRY(g_app->entryRespath),  sel_path);
+		g_free(sel_path);
+	}	
+	gtk_widget_destroy(dialog);
+}
+
+//
+// gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf)
+// 채널 수: gdk_pixbuf_get_n_channels(pixbuf) (RGB는 3, RGBA는 4)
+// 알파(투명도) 유무: gdk_pixbuf_get_has_alpha(pixbuf)
+// 행당 바이트 수 (Rowstride): gdk_pixbuf_get_rowstride(pixbuf)
+gboolean imc_convert_start(IMCImgInfo* imginfo){
+	GError *error = NULL;
+	g_print("path : %s\n", imginfo->imgpath);
+	GdkPixbuf * pixbuf = gdk_pixbuf_new_from_file(imginfo->imgpath, &error);
+	if(!pixbuf){
+		g_printerr("Failed to convert (%s) %s\n", imginfo->imgpath, error->message);
+		g_error_free(error);
+		return FALSE;
+	}
+	imginfo->width = gdk_pixbuf_get_width(pixbuf);
+	imginfo->height = gdk_pixbuf_get_height(pixbuf);
+	gboolean has_alpha = gdk_pixbuf_get_has_alpha(pixbuf);
 	
+	g_print("size : %d x %d, alpha:%s\n", 
+		imginfo->width,
+		imginfo->height,
+		(has_alpha?"true":"false"));
+		
+	g_object_unref(pixbuf);
+	//GdkPixbuf *convpixbuf = gdk_pixbuf_scale_simple(pixbuf, 
+	//	);
 	return TRUE;
 }
-void imc_select_path(GtkWidget* btn, gpointer user_data){
-	gtk_entry_set_text(GTK_ENTRY(g_app->entryRespath),  "WOWOWOWO... ");
-}
+
 static void on_convert_clicked(GtkWidget *widget, gpointer data) {
-    // 여기에 이미지 변환 로직 호출 (GdkPixbuf 활용 등)
+    // 이미지 변환 로직 호출 (GdkPixbuf 활용 등)
 	IMCAppWidgets *ui=g_app;
-    g_print("Start Convert...\n");
+    g_print("\n[Start Convert...]\n");
 	
 	int quality = gtk_spin_button_get_value_as_int ((GtkSpinButton*)ui->spinQuality);
-	g_print("quality %d\n",quality);
+	g_print("quality: %d\n",quality);
+	
+	const float ratioX = (float)gtk_spin_button_get_value_as_int ((GtkSpinButton*)ui->spinRatioX) / 100.f;
+	const float ratioY = (float)gtk_spin_button_get_value_as_int ((GtkSpinButton*)ui->spinRatioY) / 100.f;
+	g_print("ratio: x=%.2f, y=%.2f\n", ratioX, ratioY);
+	
     int index_ext = gtk_combo_box_get_active(GTK_COMBO_BOX(ui->combo));
 	g_convinfo.index_ext = index_ext;
 	switch(index_ext) {
@@ -142,34 +200,39 @@ static void on_convert_clicked(GtkWidget *widget, gpointer data) {
 	int index_rotate = gtk_combo_box_get_active(GTK_COMBO_BOX(ui->comboRotate));
 	switch(index_rotate) {
 		case ROTATE_NONE:
-		g_print("rot 0\n");
+		g_print("rot: 0\n");
 		break;
 		case ROTATE_90:
-		g_print("rot 90\n");
+		g_print("rot: 90\n");
 		break;
 		case ROTATE_180:
-		g_print("rot 180\n");
+		g_print("rot: 180\n");
 		break;
 		case ROTATE_270:
-		g_print("rot 270\n");
+		g_print("rot: 270\n");
 		break;
 	}
 	int index_flip = gtk_combo_box_get_active(GTK_COMBO_BOX(ui->comboFlip));
 	switch(index_flip) {
 		case FLIP_NONE:
-		g_print("flip none\n");
+		g_print("flip: none\n");
 		break;
 		case FLIP_X:
-		g_print("flip x\n");
+		g_print("flip: x\n");
 		break;
 		case FLIP_Y:
-		g_print("flip y\n");
+		g_print("flip: y\n");
 		break;
 	}
 	
 	//GtkWidget *label = gtk_bin_get_child(GTK_BIN(row)); // For GTK3; use gtk_list_box_row_get_child() for GTK4
     const char *respath = gtk_entry_get_text(GTK_ENTRY(ui->entryRespath));
-	printf("path: "); puts(respath);
+	if(strlen(respath) == 0)
+	{
+		g_print("no output path!\n");
+		return;
+	}
+	printf("output path: \"%s\"\n", respath); 
 	
 	
     
@@ -186,6 +249,10 @@ static void on_convert_clicked(GtkWidget *widget, gpointer data) {
 	GList *rows = gtk_container_get_children(GTK_CONTAINER(ui->listboxImage));
 	GList *iter;
 	//
+	int cnt = 0,
+		cnt_success = 0,
+		cnt_failed = 0;
+		
 	for (iter = rows; iter != NULL; iter = iter->next) {
 		 GtkWidget *row = GTK_WIDGET(iter->data); // GtkListBoxRow
 		// 
@@ -196,14 +263,23 @@ static void on_convert_clicked(GtkWidget *widget, gpointer data) {
 		const char *path = gtk_label_get_text(GTK_LABEL(label));
 		
 		IMCImgInfo imginfo;
-		g_print("변환할 대상 경로: %s\n", path);
-		//imginfo.width = ;
-		if(imc_convert_start(imginfo)){
-		}
+		imginfo.imgpath = path;
 		
+		g_print("(%d) ", cnt);
+		if(!imc_convert_start(&imginfo)){
+			g_print("FAILED to convert image \"%s\". convertion stop\n", path);
+			cnt_failed++;
+		}	
+		else { 
+			cnt_success++;
+		}
+		cnt+=1;	
 		// // 여기서 convert_and_resize_image(path, ...) 호출
 	}
-	//
+	if(cnt == 0)
+		g_print("NOTHING TO CONVERT!");
+	else
+		g_print("CONVERT SUCCESS");
 	//// gtk_container_get_children()이 반환한 리스트 구조체 자체만 해제 (내부 위젯들은 해제하면 안 됨)
 	g_list_free(rows);
 }
@@ -222,16 +298,19 @@ static void imc_activate_widget(GtkApplication *app, gpointer user_data) {
 	GtkWidget *comboRotate;
     GtkWidget *button;
 	GtkWidget *spinQuality;
+	GtkWidget *spinRatioX;
+	GtkWidget *spinRatioY;
+	
 	GtkWidget *check;
 	IMCAppWidgets* appWidget=g_slice_new(IMCAppWidgets);
 	g_app = appWidget;
 	
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "ImageCompressor");
-    gtk_container_set_border_width(GTK_CONTAINER(window), 10);
+    gtk_container_set_border_width(GTK_CONTAINER(window), 6);
 
     // 세로 배치 박스 생성
-    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);//6:여백
+    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);//6:여백
     gtk_container_add(GTK_CONTAINER(window), box);
 
     // Combo Format
@@ -245,12 +324,21 @@ static void imc_activate_widget(GtkApplication *app, gpointer user_data) {
     gtk_box_pack_start(GTK_BOX(box), combo, FALSE, FALSE, 0);
 	
 	// Quality
-	GtkAdjustment *adjustment = gtk_adjustment_new (50.0, 0.0, 100.0, 1.0, 5.0, 0.0);
-
+	GtkAdjustment *adjustment;
+	
+	adjustment = gtk_adjustment_new (100, 1.0, 1000.0, 1.0, 5.0, 0.0);
+	spinRatioX = gtk_spin_button_new (adjustment, 1.0, 0);
+	gtk_box_pack_start(GTK_BOX(box), spinRatioX, FALSE, FALSE, 0);
+	
+	
+	adjustment = gtk_adjustment_new (100, 1.0, 1000.0, 1.0, 5.0, 0.0);
+	spinRatioY = gtk_spin_button_new (adjustment, 1.0, 0);
+	gtk_box_pack_start(GTK_BOX(box), spinRatioY, FALSE, FALSE, 0);
+	
+	
+	adjustment	= gtk_adjustment_new (90.0, 0.0, 100.0, 1.0, 5.0, 0.0);
 	spinQuality = gtk_spin_button_new (adjustment, 1.0, 0);
 	gtk_box_pack_start(GTK_BOX(box), spinQuality, FALSE, FALSE, 0);
-	
-	
 	// Flip
 	combo2 = gtk_combo_box_text_new();
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo2), "none");
@@ -278,7 +366,7 @@ static void imc_activate_widget(GtkApplication *app, gpointer user_data) {
 	
 	
 	button = gtk_button_new_with_label("Select Path");
-    g_signal_connect(button, "clicked", G_CALLBACK(imc_select_path), appWidget);
+    g_signal_connect(button, "clicked", G_CALLBACK(imc_select_path), window);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
 
 	//check = gtk_check_button_new_with_label("Output folder");
@@ -319,6 +407,8 @@ static void imc_activate_widget(GtkApplication *app, gpointer user_data) {
 	appWidget->comboFlip=combo2;
 	appWidget->comboRotate=comboRotate;
 	appWidget->spinQuality=spinQuality;
+	appWidget->spinRatioX=spinRatioX;
+	appWidget->spinRatioY=spinRatioY;
 	appWidget->entryRespath = entryRespath;
 	
 	//window;
