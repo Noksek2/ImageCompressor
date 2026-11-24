@@ -32,7 +32,6 @@ namespace ImageCompressor
         }
         bool comboCheck;
         string[] formatStrings = { ".png", ".jpeg", ".bmp", ".webp", ".webp", ".jpg" };
-        //Dictionary<string>formatDict=
         List<Control> actControls;
 
         public ImageCompressor()
@@ -168,8 +167,6 @@ namespace ImageCompressor
                 g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                 g.Clear(bgColor);
 
-
-
                 float ratioX = (float)resW / srcBmp.Width;
                 float ratioY = (float)resH / srcBmp.Height;
 
@@ -191,7 +188,7 @@ namespace ImageCompressor
 
         void ConvertImageQuality(string path, string newfile, string orgext)
         {
-
+			// -> imagesize
             int width = 0, height = 0;
             Bitmap bmp;
             string convext = formatStrings[comboBox1.SelectedIndex];
@@ -277,7 +274,7 @@ namespace ImageCompressor
             }
             //comboRotation.SelectedIndex * 90 = rotation angle
             bmp.RotateFlip(GetBitmapRotateFlipType(comboRotation.SelectedIndex));
-
+			//last function => rotate??
 
             if (checkBoxDelorg.Checked) // del 체크 -> 지움
             {
@@ -313,13 +310,16 @@ namespace ImageCompressor
 
             if (!button1.Enabled) return false;
 
-            if (buttonSaveMode.Text != "Auto")
+            if (buttonSaveMode.Text != "Auto"){
+				//no Automode(=Path Mode), no path
                 if (textBoxPath.Text == "")
                 {
                     textBox1.Text = "Set the path to save the images\r\n"; return false;
                 }
+			}
             if (checkBoxFolder.Checked)
             {
+				//match output path regex
                 if (!Regex.IsMatch(textBox_outputfolder.Text, @"[_a-zA-Z0-9]+$"))
                 {
                     textBox1.Text = $"Invalid output folder name:\"{textBox_outputfolder.Text}\" Pattern : [_a-zA-Z0-9]+\r\n"; return false;
@@ -368,9 +368,9 @@ namespace ImageCompressor
         }
         void ConvertImages(string[] fileNames, bool isDrop = false) //변환할 파일들, Drop 여부
         {
-            EnableControls(false); //컨트롤 비활성화 (변환 오류 방지)
-            string orgpath, newpath, newfile, ext; //원본 파일 경로, 새 파일 경로, 확장자
-            int suc = 0, fai = 0; //성공 횟수, 실패 횟수
+            EnableControls(false); // Unable Controls
+            string orgpath, newpath, newfile, ext; //origin file path, new path, ext
+            int suc = 0, fai = 0; //success count, failed count
 
             if (buttonSaveMode.Text != "Auto")
                 AppendTextMsg("Located in \"" + textBoxPath.Text + "\"\r\n");
@@ -571,7 +571,7 @@ namespace ImageCompressor
         {
 
         }
-
+		//only identifier
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!('A' <= e.KeyChar && e.KeyChar <= 'Z') && !('a' <= e.KeyChar && e.KeyChar <= 'z')
@@ -605,7 +605,7 @@ namespace ImageCompressor
         {
 
         }
-
+		//Set Bgcolor in Scratch mode
         private void button4_Click_1(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
